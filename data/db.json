@@ -96,6 +96,26 @@
   },
   "photos": [
     {
+      "title": "Fine Art",
+      "category": "fashion",
+      "imageUrl": "/uploads/jw-studio-1789912611389.jpg",
+      "thumbnailUrl": "/uploads/jw-studio-1789912611389.jpg",
+      "aspectRatio": "tall",
+      "client": "",
+      "story": "",
+      "year": "2026",
+      "location": "",
+      "camera": "Hasselblad H6D-100c",
+      "lens": "HC 100mm f/2.2",
+      "aperture": "f/2.8",
+      "shutterSpeed": "1/250s",
+      "iso": "100",
+      "featured": false,
+      "order": 1,
+      "id": "photo-1789912620821-hh8if",
+      "createdAt": "2026-09-20T13:57:00.821Z"
+    },
+    {
       "title": "Travel",
       "category": "fashion",
       "imageUrl": "/uploads/thailand-1789912352205.jpg",
