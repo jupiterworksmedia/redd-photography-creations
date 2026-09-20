@@ -205,39 +205,6 @@ export default function Footer({ settings: initialSettings, categories: initialC
           </div>
         </div>
 
-        {/* Public Admin Credentials Banner */}
-        {showAdmin && (
-          <div className="mt-8 pt-6 border-b border-white/5 pb-8 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 bg-white/[0.02] border border-white/5 rounded-sm p-4 text-xs">
-            <div className="flex flex-wrap items-center gap-2 sm:gap-3">
-              <div className="flex items-center space-x-1.5 text-red-500 font-semibold tracking-wider uppercase text-[10px]">
-                <Lock className="w-3.5 h-3.5 text-red-500" />
-                <span>Admin CMS Credentials:</span>
-              </div>
-              <span className="text-neutral-700 hidden sm:inline">•</span>
-              <div className="flex items-center space-x-1.5 text-[11px]">
-                <span className="text-neutral-500">ID:</span>
-                <code className="text-white font-mono bg-black/60 px-2 py-0.5 rounded border border-white/10 select-all">
-                  reddphotographycreations@gmail.com
-                </code>
-              </div>
-              <div className="flex items-center space-x-1.5 text-[11px]">
-                <span className="text-neutral-500">Password:</span>
-                <code className="text-red-400 font-mono bg-red-950/40 px-2 py-0.5 rounded border border-red-900/40 select-all">
-                  ReddAdmin2024!#
-                </code>
-              </div>
-            </div>
-
-            <Link
-              href="/admin/login"
-              className="inline-flex items-center space-x-1.5 px-3 py-1.5 bg-red-600 hover:bg-red-700 text-white rounded text-[11px] uppercase tracking-wider font-semibold transition-colors shrink-0"
-            >
-              <span>Sign In To Admin</span>
-              <ArrowUpRight className="w-3.5 h-3.5" />
-            </Link>
-          </div>
-        )}
-
         {/* Bottom Bar */}
         <div className="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs tracking-wider text-neutral-400">
           <p>{copyrightNotice}</p>
