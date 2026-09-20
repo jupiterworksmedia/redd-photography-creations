@@ -3,7 +3,10 @@ import bcrypt from 'bcryptjs';
 import { getSettings, updateSettings, getAdminUser, updateAdminPassword } from '@/lib/db';
 import { getCurrentAdminSession } from '@/lib/auth';
 
-export async function GET() {
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
+export async function GET(_request: NextRequest) {
   try {
     const settings = getSettings();
     return NextResponse.json({ success: true, settings });
@@ -65,4 +68,12 @@ export async function PUT(request: NextRequest) {
     console.error('Error updating settings:', error);
     return NextResponse.json({ error: 'Failed to update settings' }, { status: 500 });
   }
+}
+
+export async function POST(request: NextRequest) {
+  return PUT(request);
+}
+
+export async function PATCH(request: NextRequest) {
+  return PUT(request);
 }

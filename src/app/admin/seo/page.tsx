@@ -65,11 +65,19 @@ export default function AdminSeoPage() {
 
     setSaving(true);
     try {
-      const res = await fetch('/api/seo', {
+      let res = await fetch('/api/seo', {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ updates: seo }),
       });
+
+      if (res.status === 405) {
+        res = await fetch('/api/seo', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ updates: seo }),
+        });
+      }
 
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || 'Failed to update SEO settings');

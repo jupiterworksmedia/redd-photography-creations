@@ -40,11 +40,19 @@ export default function AdminSettingsPage() {
     setSettingsError(null);
 
     try {
-      const res = await fetch('/api/settings', {
+      let res = await fetch('/api/settings', {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ settingsUpdates: settings }),
       });
+
+      if (res.status === 405) {
+        res = await fetch('/api/settings', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ settingsUpdates: settings }),
+        });
+      }
 
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || 'Failed to update settings');
@@ -80,7 +88,7 @@ export default function AdminSettingsPage() {
     setChangingPassword(true);
 
     try {
-      const res = await fetch('/api/settings', {
+      let res = await fetch('/api/settings', {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -90,6 +98,19 @@ export default function AdminSettingsPage() {
           },
         }),
       });
+
+      if (res.status === 405) {
+        res = await fetch('/api/settings', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            passwordChange: {
+              currentPassword,
+              newPassword,
+            },
+          }),
+        });
+      }
 
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || 'Failed to change password');

@@ -87,11 +87,20 @@ export default function AdminNavigationPage() {
         },
       };
 
-      const res = await fetch('/api/settings', {
+      let res = await fetch('/api/settings', {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),
       });
+
+      // If 405 Method Not Allowed (e.g. from static edge proxy cache), fallback to POST
+      if (res.status === 405) {
+        res = await fetch('/api/settings', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload),
+        });
+      }
 
       const responseText = await res.text();
       let data: { success?: boolean; error?: string; settings?: SiteSettings } = {};
@@ -1032,6 +1041,28 @@ export default function AdminNavigationPage() {
                 onChange={(e) => setSettings({ ...settings, showAdminInFooter: e.target.checked })}
                 className="w-4 h-4 accent-red-600"
               />
+            </div>
+
+            {/* Dedicated Save Footer Settings Button */}
+            <div className="pt-6 border-t border-white/10 flex justify-end">
+              <button
+                type="button"
+                onClick={() => handleSaveSettings()}
+                disabled={saving}
+                className="inline-flex items-center space-x-2 px-6 py-3 bg-red-600 hover:bg-red-700 text-white text-xs uppercase tracking-wider font-semibold rounded-sm transition-colors cursor-pointer disabled:opacity-50"
+              >
+                {saving ? (
+                  <>
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                    <span>Saving Footer...</span>
+                  </>
+                ) : (
+                  <>
+                    <Save className="w-4 h-4" />
+                    <span>Save Footer Settings</span>
+                  </>
+                )}
+              </button>
             </div>
           </div>
         </div>

@@ -2,7 +2,10 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getSeoSettings, updateSeoSettings } from '@/lib/db';
 import { getCurrentAdminSession } from '@/lib/auth';
 
-export async function GET() {
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
+export async function GET(_request: NextRequest) {
   try {
     const seo = getSeoSettings();
     return NextResponse.json({ success: true, seo });
@@ -43,4 +46,12 @@ export async function PUT(request: NextRequest) {
     console.error('Error updating SEO settings:', error);
     return NextResponse.json({ error: 'Failed to update SEO settings' }, { status: 500 });
   }
+}
+
+export async function POST(request: NextRequest) {
+  return PUT(request);
+}
+
+export async function PATCH(request: NextRequest) {
+  return PUT(request);
 }
