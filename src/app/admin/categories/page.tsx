@@ -131,6 +131,10 @@ export default function AdminCategoriesPage() {
         showNotification('success', `New category "${formState.label}" added successfully.`);
       }
 
+      try {
+        window.dispatchEvent(new Event('redd_settings_updated'));
+      } catch {}
+
       setModalOpen(false);
       await fetchData();
     } catch (err: unknown) {

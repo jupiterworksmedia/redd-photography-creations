@@ -57,6 +57,11 @@ export default function AdminSettingsPage() {
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || 'Failed to update settings');
 
+      try {
+        localStorage.setItem('redd_site_settings', JSON.stringify(data.settings || settings));
+        window.dispatchEvent(new Event('redd_settings_updated'));
+      } catch {}
+
       setSettingsSuccess(true);
       setTimeout(() => setSettingsSuccess(false), 4000);
     } catch (err: unknown) {

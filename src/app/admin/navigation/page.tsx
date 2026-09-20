@@ -116,7 +116,13 @@ export default function AdminNavigationPage() {
 
       if (!res.ok) throw new Error(data.error || `Failed to save settings (${res.status})`);
 
-      if (data.settings) setSettings(data.settings);
+      if (data.settings) {
+        setSettings(data.settings);
+        try {
+          localStorage.setItem('redd_site_settings', JSON.stringify(data.settings));
+          window.dispatchEvent(new Event('redd_settings_updated'));
+        } catch {}
+      }
       showNotification('success', 'Navigation, Logo & Footer settings saved successfully!');
     } catch (err: unknown) {
       if (err instanceof Error) {

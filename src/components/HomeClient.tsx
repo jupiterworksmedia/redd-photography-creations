@@ -20,19 +20,81 @@ interface HomeClientProps {
 
 export default function HomeClient({
   initialPhotos,
-  settings,
-  categories = [],
-  slides = [],
+  settings: initialSettings,
+  categories: initialCategories = [],
+  slides: initialSlides = [],
 }: HomeClientProps) {
+  const [settings, setSettings] = useState<SiteSettings>(initialSettings);
+  const [categories, setCategories] = useState<CategoryItem[]>(initialCategories);
+  const [slides, setSlides] = useState<HeroSlideItem[]>(initialSlides);
+  const [photos, setPhotos] = useState<PhotoItem[]>(initialPhotos);
   const [selectedCategory, setSelectedCategory] = useState<CategoryType | 'all'>('all');
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [currentPhotoIndex, setCurrentPhotoIndex] = useState(0);
 
+  // Sync with live settings, categories, slides, photos and localStorage
+  React.useEffect(() => {
+    if (initialSettings) setSettings(initialSettings);
+    if (initialCategories && initialCategories.length > 0) setCategories(initialCategories);
+    if (initialSlides && initialSlides.length > 0) setSlides(initialSlides);
+    if (initialPhotos && initialPhotos.length > 0) setPhotos(initialPhotos);
+
+    try {
+      const stored = localStorage.getItem('redd_site_settings');
+      if (stored) {
+        const parsed = JSON.parse(stored);
+        if (parsed) setSettings(parsed);
+      }
+    } catch {}
+
+    fetch('/api/settings', { cache: 'no-store' })
+      .then((r) => r.json())
+      .then((d) => {
+        if (d.settings) setSettings(d.settings);
+      })
+      .catch(() => {});
+
+    fetch('/api/categories', { cache: 'no-store' })
+      .then((r) => r.json())
+      .then((d) => {
+        if (d.categories) setCategories(d.categories);
+      })
+      .catch(() => {});
+
+    fetch('/api/slides', { cache: 'no-store' })
+      .then((r) => r.json())
+      .then((d) => {
+        if (d.slides) setSlides(d.slides);
+      })
+      .catch(() => {});
+
+    fetch('/api/gallery', { cache: 'no-store' })
+      .then((r) => r.json())
+      .then((d) => {
+        if (d.photos) setPhotos(d.photos);
+      })
+      .catch(() => {});
+
+    const handleUpdate = () => {
+      try {
+        const stored = localStorage.getItem('redd_site_settings');
+        if (stored) setSettings(JSON.parse(stored));
+      } catch {}
+    };
+
+    window.addEventListener('redd_settings_updated', handleUpdate);
+    window.addEventListener('storage', handleUpdate);
+    return () => {
+      window.removeEventListener('redd_settings_updated', handleUpdate);
+      window.removeEventListener('storage', handleUpdate);
+    };
+  }, [initialSettings, initialCategories, initialSlides, initialPhotos]);
+
   // Filtered photos based on active category
   const activePhotos =
     selectedCategory === 'all'
-      ? initialPhotos
-      : initialPhotos.filter((p) => p.category.toLowerCase() === selectedCategory.toLowerCase());
+      ? photos
+      : photos.filter((p) => p.category.toLowerCase() === selectedCategory.toLowerCase());
 
   const handlePhotoClick = (indexInFiltered: number) => {
     setCurrentPhotoIndex(indexInFiltered);
@@ -100,7 +162,7 @@ export default function HomeClient({
 
       {/* Portfolio Gallery Grid */}
       <PortfolioGrid
-        photos={initialPhotos}
+        photos={photos}
         selectedCategory={selectedCategory}
         onSelectCategory={(cat) => setSelectedCategory(cat)}
         onPhotoClick={handlePhotoClick}

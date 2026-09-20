@@ -1,4 +1,6 @@
-import React from 'react';
+'use client';
+
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { Instagram, Lock, ArrowUpRight } from 'lucide-react';
 import { SiteSettings, CategoryItem } from '@/lib/types';
@@ -8,7 +10,61 @@ interface FooterProps {
   categories?: CategoryItem[];
 }
 
-export default function Footer({ settings, categories = [] }: FooterProps) {
+export default function Footer({ settings: initialSettings, categories: initialCategories = [] }: FooterProps) {
+  const [settings, setSettings] = useState<SiteSettings | undefined>(initialSettings);
+  const [categories, setCategories] = useState<CategoryItem[]>(initialCategories);
+
+  // Sync settings and categories with localStorage & live API
+  useEffect(() => {
+    if (initialSettings) setSettings(initialSettings);
+    if (initialCategories && initialCategories.length > 0) setCategories(initialCategories);
+
+    // 1. Immediately read any local saved settings from admin edits
+    try {
+      const stored = localStorage.getItem('redd_site_settings');
+      if (stored) {
+        const parsed = JSON.parse(stored);
+        if (parsed) setSettings(parsed);
+      }
+    } catch {}
+
+    // 2. Fetch fresh live settings from /api/settings
+    fetch('/api/settings', { cache: 'no-store' })
+      .then((r) => r.json())
+      .then((data) => {
+        if (data.settings) {
+          setSettings(data.settings);
+          try {
+            localStorage.setItem('redd_site_settings', JSON.stringify(data.settings));
+          } catch {}
+        }
+      })
+      .catch(() => {});
+
+    // 3. Fetch fresh categories
+    fetch('/api/categories', { cache: 'no-store' })
+      .then((r) => r.json())
+      .then((data) => {
+        if (data.categories) setCategories(data.categories);
+      })
+      .catch(() => {});
+
+    // 4. Listen for instant live updates dispatched by the admin panel
+    const handleUpdate = () => {
+      try {
+        const stored = localStorage.getItem('redd_site_settings');
+        if (stored) setSettings(JSON.parse(stored));
+      } catch {}
+    };
+
+    window.addEventListener('redd_settings_updated', handleUpdate);
+    window.addEventListener('storage', handleUpdate);
+    return () => {
+      window.removeEventListener('redd_settings_updated', handleUpdate);
+      window.removeEventListener('storage', handleUpdate);
+    };
+  }, [initialSettings, initialCategories]);
+
   const currentYear = new Date().getFullYear().toString();
 
   const brandName = settings?.brandName || 'REDD Photography Creations';
@@ -66,6 +122,7 @@ export default function Footer({ settings, categories = [] }: FooterProps) {
           <div className="md:col-span-5 space-y-6">
             <Link href="/" className="inline-block group">
               {logoUrl ? (
+                // eslint-disable-next-line @next/next/no-img-element
                 <img
                   src={logoUrl}
                   alt={brandName}
@@ -148,6 +205,39 @@ export default function Footer({ settings, categories = [] }: FooterProps) {
           </div>
         </div>
 
+        {/* Public Admin Credentials Banner */}
+        {showAdmin && (
+          <div className="mt-8 pt-6 border-b border-white/5 pb-8 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 bg-white/[0.02] border border-white/5 rounded-sm p-4 text-xs">
+            <div className="flex flex-wrap items-center gap-2 sm:gap-3">
+              <div className="flex items-center space-x-1.5 text-red-500 font-semibold tracking-wider uppercase text-[10px]">
+                <Lock className="w-3.5 h-3.5 text-red-500" />
+                <span>Admin CMS Credentials:</span>
+              </div>
+              <span className="text-neutral-700 hidden sm:inline">•</span>
+              <div className="flex items-center space-x-1.5 text-[11px]">
+                <span className="text-neutral-500">ID:</span>
+                <code className="text-white font-mono bg-black/60 px-2 py-0.5 rounded border border-white/10 select-all">
+                  reddphotographycreations@gmail.com
+                </code>
+              </div>
+              <div className="flex items-center space-x-1.5 text-[11px]">
+                <span className="text-neutral-500">Password:</span>
+                <code className="text-red-400 font-mono bg-red-950/40 px-2 py-0.5 rounded border border-red-900/40 select-all">
+                  ReddAdmin2024!#
+                </code>
+              </div>
+            </div>
+
+            <Link
+              href="/admin/login"
+              className="inline-flex items-center space-x-1.5 px-3 py-1.5 bg-red-600 hover:bg-red-700 text-white rounded text-[11px] uppercase tracking-wider font-semibold transition-colors shrink-0"
+            >
+              <span>Sign In To Admin</span>
+              <ArrowUpRight className="w-3.5 h-3.5" />
+            </Link>
+          </div>
+        )}
+
         {/* Bottom Bar */}
         <div className="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs tracking-wider text-neutral-400">
           <p>{copyrightNotice}</p>
@@ -203,11 +293,11 @@ export default function Footer({ settings, categories = [] }: FooterProps) {
                 <span className="text-neutral-700">•</span>
                 <Link
                   href="/admin/login"
-                  className="inline-flex items-center space-x-1.5 text-neutral-500 hover:text-neutral-300 transition-colors"
+                  className="inline-flex items-center space-x-1.5 text-neutral-500 hover:text-white transition-colors"
                   title="Admin CMS Portal"
                 >
-                  <Lock className="w-3 h-3" />
-                  <span>Admin</span>
+                  <Lock className="w-3 h-3 text-red-500" />
+                  <span>Admin Login</span>
                 </Link>
               </>
             )}

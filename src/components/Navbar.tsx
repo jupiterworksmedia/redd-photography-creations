@@ -26,14 +26,36 @@ export default function Navbar({ settings: initialSettings }: NavbarProps) {
   useEffect(() => {
     if (initialSettings) {
       setSettings(initialSettings);
-    } else {
-      fetch('/api/settings')
-        .then((r) => r.json())
-        .then((data) => {
-          if (data.settings) setSettings(data.settings);
-        })
-        .catch((e) => console.error('Error fetching settings for navbar:', e));
     }
+
+    try {
+      const stored = localStorage.getItem('redd_site_settings');
+      if (stored) {
+        const parsed = JSON.parse(stored);
+        if (parsed) setSettings(parsed);
+      }
+    } catch {}
+
+    fetch('/api/settings', { cache: 'no-store' })
+      .then((r) => r.json())
+      .then((data) => {
+        if (data.settings) setSettings(data.settings);
+      })
+      .catch((e) => console.error('Error fetching settings for navbar:', e));
+
+    const handleUpdate = () => {
+      try {
+        const stored = localStorage.getItem('redd_site_settings');
+        if (stored) setSettings(JSON.parse(stored));
+      } catch {}
+    };
+
+    window.addEventListener('redd_settings_updated', handleUpdate);
+    window.addEventListener('storage', handleUpdate);
+    return () => {
+      window.removeEventListener('redd_settings_updated', handleUpdate);
+      window.removeEventListener('storage', handleUpdate);
+    };
   }, [initialSettings]);
 
   useEffect(() => {

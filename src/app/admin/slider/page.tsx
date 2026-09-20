@@ -261,6 +261,10 @@ export default function AdminSliderPage() {
         showNotification('success', `New slide "${formState.title}" added successfully.`);
       }
 
+      try {
+        window.dispatchEvent(new Event('redd_settings_updated'));
+      } catch {}
+
       setModalOpen(false);
       await fetchData();
     } catch (err: unknown) {
