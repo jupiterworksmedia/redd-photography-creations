@@ -267,25 +267,6 @@
       "createdAt": "2023-12-05T19:45:00Z"
     },
     {
-      "id": "port-03",
-      "title": "Grace in Monolith",
-      "category": "portraits",
-      "imageUrl": "/uploads/thailand-1789912121102.jpg",
-      "aspectRatio": "tall",
-      "client": "Prima Ballerina Study",
-      "story": "Poise and inner composure of leading soloist before opening night at Lincoln Center.",
-      "year": "2024",
-      "location": "New York, USA",
-      "camera": "Sony α1",
-      "lens": "FE 135mm f/1.8 GM",
-      "aperture": "f/2.0",
-      "shutterSpeed": "1/640s",
-      "iso": "160",
-      "featured": true,
-      "order": 10,
-      "createdAt": "2024-01-22T17:10:00Z"
-    },
-    {
       "id": "eve-01",
       "title": "Met Gala Midnight Veil",
       "category": "events",
