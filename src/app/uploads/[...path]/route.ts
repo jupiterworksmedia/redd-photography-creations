@@ -21,8 +21,14 @@ export async function GET(
     let filePath = path.join(process.cwd(), 'public', 'uploads', ...safeSegments);
 
     if (!fs.existsSync(filePath) || !fs.statSync(filePath).isFile()) {
-      // Secondary fallback location: root uploads directory
-      filePath = path.join(process.cwd(), 'uploads', ...safeSegments);
+      // Secondary fallback location: /tmp/uploads (on Vercel / serverless)
+      const tmpPath = path.join('/tmp', 'uploads', ...safeSegments);
+      if (fs.existsSync(tmpPath) && fs.statSync(tmpPath).isFile()) {
+        filePath = tmpPath;
+      } else {
+        // Tertiary fallback location: root uploads directory
+        filePath = path.join(process.cwd(), 'uploads', ...safeSegments);
+      }
     }
 
     if (!fs.existsSync(filePath) || !fs.statSync(filePath).isFile()) {

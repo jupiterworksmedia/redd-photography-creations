@@ -4,19 +4,54 @@ import bcrypt from 'bcryptjs';
 import { DatabaseSchema, PhotoItem, InquiryItem, SiteSettings, AdminUser, CategoryItem, HeroSlideItem, SeoAnalyticsSettings } from './types';
 import { initialSeedData, INITIAL_ADMIN_PASSWORD } from './seedData';
 
-const DATA_DIR = path.join(process.cwd(), 'data');
+// Determine writable data directory (use /tmp on Vercel / AWS Lambda)
+const IS_VERCEL = Boolean(process.env.VERCEL) || Boolean(process.env.AWS_LAMBDA_FUNCTION_NAME);
+const BUNDLED_DB_FILE = path.join(process.cwd(), 'data', 'db.json');
+const DATA_DIR = IS_VERCEL ? path.join('/tmp', 'data') : path.join(process.cwd(), 'data');
 const DB_FILE = path.join(DATA_DIR, 'db.json');
 
+// In-memory cache for serverless function lifecycles
+let memoryCache: DatabaseSchema | null = null;
+
 function ensureDataDir(): void {
-  if (!fs.existsSync(DATA_DIR)) {
-    fs.mkdirSync(DATA_DIR, { recursive: true });
+  try {
+    if (!fs.existsSync(DATA_DIR)) {
+      fs.mkdirSync(DATA_DIR, { recursive: true });
+    }
+  } catch (err) {
+    console.warn('[DB] Warning: Could not create DATA_DIR:', err);
   }
 }
 
 function getDatabase(): DatabaseSchema {
+  // If we already have an active in-memory cache, return it immediately
+  if (memoryCache) {
+    return memoryCache;
+  }
+
   ensureDataDir();
 
-  if (!fs.existsSync(DB_FILE)) {
+  // On Vercel, if /tmp/data/db.json doesn't exist yet, try to copy from bundled db.json
+  if (IS_VERCEL && !fs.existsSync(DB_FILE)) {
+    try {
+      if (fs.existsSync(BUNDLED_DB_FILE)) {
+        const bundledRaw = fs.readFileSync(BUNDLED_DB_FILE, 'utf-8');
+        fs.writeFileSync(DB_FILE, bundledRaw, 'utf-8');
+      }
+    } catch (err) {
+      console.warn('[DB] Could not copy bundled DB to /tmp, will read directly:', err);
+    }
+  }
+
+  // Check if DB file exists (either in /tmp/data or process.cwd()/data)
+  let targetFile = DB_FILE;
+  if (!fs.existsSync(targetFile)) {
+    if (fs.existsSync(BUNDLED_DB_FILE)) {
+      targetFile = BUNDLED_DB_FILE;
+    }
+  }
+
+  if (!fs.existsSync(targetFile)) {
     // Hash the initial password for the admin
     const passwordHash = bcrypt.hashSync(INITIAL_ADMIN_PASSWORD, 10);
     const initialDb: DatabaseSchema = {
@@ -26,12 +61,13 @@ function getDatabase(): DatabaseSchema {
         passwordHash,
       },
     };
+    memoryCache = initialDb;
     saveDatabase(initialDb);
     return initialDb;
   }
 
   try {
-    const raw = fs.readFileSync(DB_FILE, 'utf-8');
+    const raw = fs.readFileSync(targetFile, 'utf-8');
     const parsed: DatabaseSchema = JSON.parse(raw);
 
     let needsSave = false;
@@ -64,13 +100,15 @@ function getDatabase(): DatabaseSchema {
       needsSave = true;
     }
 
+    memoryCache = parsed;
+
     if (needsSave) {
       saveDatabase(parsed);
     }
 
     return parsed;
   } catch (err) {
-    console.error('Error reading database file, re-seeding:', err);
+    console.error('Error reading database file, using fallback seed:', err);
     const passwordHash = bcrypt.hashSync(INITIAL_ADMIN_PASSWORD, 10);
     const fallbackDb: DatabaseSchema = {
       ...initialSeedData,
@@ -79,16 +117,24 @@ function getDatabase(): DatabaseSchema {
         passwordHash,
       },
     };
+    memoryCache = fallbackDb;
     saveDatabase(fallbackDb);
     return fallbackDb;
   }
 }
 
 function saveDatabase(data: DatabaseSchema): void {
-  ensureDataDir();
-  const tempFile = `${DB_FILE}.tmp.${Date.now()}`;
-  fs.writeFileSync(tempFile, JSON.stringify(data, null, 2), 'utf-8');
-  fs.renameSync(tempFile, DB_FILE);
+  // Always update in-memory cache first
+  memoryCache = data;
+
+  try {
+    ensureDataDir();
+    const tempFile = `${DB_FILE}.tmp.${Date.now()}`;
+    fs.writeFileSync(tempFile, JSON.stringify(data, null, 2), 'utf-8');
+    fs.renameSync(tempFile, DB_FILE);
+  } catch (err) {
+    console.warn('[DB] Warning: File system write failed (operating in memory mode):', err);
+  }
 }
 
 // ----------------- PHOTOS API -----------------

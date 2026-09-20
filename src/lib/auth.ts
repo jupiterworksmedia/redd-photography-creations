@@ -2,7 +2,7 @@ import { SignJWT, jwtVerify } from 'jose';
 import bcrypt from 'bcryptjs';
 import { cookies } from 'next/headers';
 import { getAdminUser, updateAdminLastLogin, updateAdminPassword } from './db';
-import { INITIAL_ADMIN_PASSWORD } from './seedData';
+import { INITIAL_ADMIN_PASSWORD, INITIAL_ADMIN_EMAIL } from './seedData';
 
 const JWT_SECRET = process.env.JWT_SECRET || 'redd-photography-creations-ultra-secret-jwt-key-2024-998811';
 const secretKey = new TextEncoder().encode(JWT_SECRET);
@@ -39,33 +39,57 @@ export async function verifySessionToken(token: string): Promise<AdminPayload | 
 }
 
 export async function authenticateAdmin(email: string, passwordPlain: string): Promise<{ success: boolean; error?: string }> {
-  const admin = getAdminUser();
-
-  // Strictly enforce the specified admin email
-  if (email.trim().toLowerCase() !== admin.email.toLowerCase()) {
-    return { success: false, error: 'Access restricted: Unauthorized administrator email' };
-  }
-
-  let matches = false;
   try {
-    matches = bcrypt.compareSync(passwordPlain, admin.passwordHash);
-  } catch {
-    matches = false;
-  }
+    const admin = getAdminUser();
+    const expectedEmail = (admin?.email || INITIAL_ADMIN_EMAIL || 'reddphotographycreations@gmail.com').toLowerCase();
 
-  // Self-healing fallback: If hash is corrupted or outdated but password matches INITIAL_ADMIN_PASSWORD
-  if (!matches && passwordPlain === INITIAL_ADMIN_PASSWORD) {
-    const freshHash = bcrypt.hashSync(INITIAL_ADMIN_PASSWORD, 10);
-    updateAdminPassword(freshHash);
-    matches = true;
-  }
+    // Strictly enforce the specified admin email
+    if (email.trim().toLowerCase() !== expectedEmail) {
+      return { success: false, error: 'Access restricted: Unauthorized administrator email' };
+    }
 
-  if (!matches) {
-    return { success: false, error: 'Invalid administrator credentials' };
-  }
+    let matches = false;
+    try {
+      if (admin?.passwordHash) {
+        matches = bcrypt.compareSync(passwordPlain, admin.passwordHash);
+      }
+    } catch {
+      matches = false;
+    }
 
-  updateAdminLastLogin();
-  return { success: true };
+    // Self-healing fallback: If hash is corrupted or outdated but password matches INITIAL_ADMIN_PASSWORD
+    if (!matches && passwordPlain === INITIAL_ADMIN_PASSWORD) {
+      matches = true;
+      try {
+        const freshHash = bcrypt.hashSync(INITIAL_ADMIN_PASSWORD, 10);
+        updateAdminPassword(freshHash);
+      } catch (err) {
+        console.warn('[AUTH] Could not update admin password hash:', err);
+      }
+    }
+
+    if (!matches) {
+      return { success: false, error: 'Invalid administrator credentials' };
+    }
+
+    try {
+      updateAdminLastLogin();
+    } catch (err) {
+      console.warn('[AUTH] Could not update admin last login:', err);
+    }
+
+    return { success: true };
+  } catch (err) {
+    console.error('[AUTH] Critical error during authentication:', err);
+    // Emergency fallback if DB throws unexpected error: check hardcoded credentials directly
+    if (
+      email.trim().toLowerCase() === 'reddphotographycreations@gmail.com' &&
+      passwordPlain === INITIAL_ADMIN_PASSWORD
+    ) {
+      return { success: true };
+    }
+    return { success: false, error: 'Authentication processing failure' };
+  }
 }
 
 export async function getCurrentAdminSession(): Promise<AdminPayload | null> {
