@@ -1,6 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getCategoryById, updateCategory, deleteCategory, getPhotos } from '@/lib/db';
+import { getCategoryById, updateCategory, deleteCategory, getPhotos, persistDatabase } from '@/lib/db';
 import { getCurrentAdminSession } from '@/lib/auth';
+import { revalidatePath } from 'next/cache';
+
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
 
 export async function GET(
   _request: NextRequest,
@@ -34,6 +38,11 @@ export async function PUT(
     if (!updated) {
       return NextResponse.json({ error: 'Category not found' }, { status: 404 });
     }
+
+    await persistDatabase().catch(() => {});
+    try {
+      revalidatePath('/', 'layout');
+    } catch {}
 
     return NextResponse.json({ success: true, category: updated });
   } catch (error) {
@@ -83,6 +92,11 @@ export async function DELETE(
     if (!deleted) {
       return NextResponse.json({ error: 'Category not found or already deleted' }, { status: 404 });
     }
+
+    await persistDatabase().catch(() => {});
+    try {
+      revalidatePath('/', 'layout');
+    } catch {}
 
     return NextResponse.json({ success: true, message: 'Category deleted successfully' });
   } catch (error) {

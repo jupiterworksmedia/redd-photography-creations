@@ -62,6 +62,10 @@ export default function AdminGalleryPage() {
 
       if (photosData.photos) {
         setPhotos(photosData.photos);
+        try {
+          localStorage.setItem('redd_photos', JSON.stringify(photosData.photos));
+          window.dispatchEvent(new CustomEvent('redd_data_updated', { detail: { type: 'photos', data: photosData.photos } }));
+        } catch {}
       }
       if (catsData.categories) {
         setDbCategories(catsData.categories);
@@ -181,7 +185,12 @@ export default function AdminGalleryPage() {
     try {
       const res = await fetch(`/api/gallery/${id}`, { method: 'DELETE' });
       if (res.ok) {
-        setPhotos(photos.filter((p) => p.id !== id));
+        const next = photos.filter((p) => p.id !== id);
+        setPhotos(next);
+        try {
+          localStorage.setItem('redd_photos', JSON.stringify(next));
+          window.dispatchEvent(new CustomEvent('redd_data_updated', { detail: { type: 'photos', data: next } }));
+        } catch {}
       } else {
         alert('Failed to delete photo');
       }
@@ -200,9 +209,12 @@ export default function AdminGalleryPage() {
         body: JSON.stringify({ featured: newFeatured }),
       });
       if (res.ok) {
-        setPhotos(
-          photos.map((p) => (p.id === photo.id ? { ...p, featured: newFeatured } : p))
-        );
+        const next = photos.map((p) => (p.id === photo.id ? { ...p, featured: newFeatured } : p));
+        setPhotos(next);
+        try {
+          localStorage.setItem('redd_photos', JSON.stringify(next));
+          window.dispatchEvent(new CustomEvent('redd_data_updated', { detail: { type: 'photos', data: next } }));
+        } catch {}
       }
     } catch (err) {
       console.error('Featured toggle error:', err);

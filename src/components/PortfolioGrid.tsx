@@ -107,6 +107,12 @@ export default function PortfolioGrid({
                     src={photo.imageUrl}
                     alt={photo.title}
                     loading="lazy"
+                    onError={(e) => {
+                      const target = e.currentTarget;
+                      if (!target.src.includes('unsplash.com')) {
+                        target.src = 'https://images.unsplash.com/photo-1509631179647-0177331693ae?q=80&w=1200&auto=format&fit=crop';
+                      }
+                    }}
                     className="w-full h-full object-cover object-center transition-transform duration-700 ease-out group-hover:scale-105 filter brightness-[0.92] contrast-[1.05] group-hover:brightness-100"
                   />
 

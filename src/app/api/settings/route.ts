@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import bcrypt from 'bcryptjs';
-import { getSettings, updateSettings, getAdminUser, updateAdminPassword } from '@/lib/db';
+import { getSettings, updateSettings, getAdminUser, updateAdminPassword, persistDatabase } from '@/lib/db';
 import { getCurrentAdminSession } from '@/lib/auth';
+import { revalidatePath } from 'next/cache';
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
@@ -58,6 +59,14 @@ export async function PUT(request: NextRequest) {
     if (settingsUpdates) {
       updatedSettings = updateSettings(settingsUpdates);
     }
+
+    await persistDatabase().catch(() => {});
+    try {
+      revalidatePath('/', 'layout');
+      revalidatePath('/about');
+      revalidatePath('/services');
+      revalidatePath('/contact');
+    } catch {}
 
     return NextResponse.json({
       success: true,

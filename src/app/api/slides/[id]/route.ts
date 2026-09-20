@@ -1,6 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getHeroSlideById, updateHeroSlide, deleteHeroSlide } from '@/lib/db';
+import { getHeroSlideById, updateHeroSlide, deleteHeroSlide, persistDatabase } from '@/lib/db';
 import { getCurrentAdminSession } from '@/lib/auth';
+import { revalidatePath } from 'next/cache';
+
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
 
 export async function GET(
   _request: NextRequest,
@@ -35,6 +39,11 @@ export async function PUT(
       return NextResponse.json({ error: 'Hero slide not found' }, { status: 404 });
     }
 
+    await persistDatabase().catch(() => {});
+    try {
+      revalidatePath('/', 'layout');
+    } catch {}
+
     return NextResponse.json({ success: true, slide: updated });
   } catch (error) {
     console.error('Error updating hero slide:', error);
@@ -68,6 +77,11 @@ export async function DELETE(
     if (!deleted) {
       return NextResponse.json({ error: 'Hero slide not found or already deleted' }, { status: 404 });
     }
+
+    await persistDatabase().catch(() => {});
+    try {
+      revalidatePath('/', 'layout');
+    } catch {}
 
     return NextResponse.json({ success: true, message: 'Hero slide deleted successfully' });
   } catch (error) {

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getSeoSettings, updateSeoSettings } from '@/lib/db';
+import { getSeoSettings, updateSeoSettings, persistDatabase } from '@/lib/db';
 import { getCurrentAdminSession } from '@/lib/auth';
+import { revalidatePath } from 'next/cache';
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
@@ -37,6 +38,15 @@ export async function PUT(request: NextRequest) {
     }
 
     const updated = updateSeoSettings(updates);
+
+    await persistDatabase().catch(() => {});
+    try {
+      revalidatePath('/', 'layout');
+      revalidatePath('/robots.txt');
+      revalidatePath('/sitemap.xml');
+      revalidatePath('/llms.txt');
+    } catch {}
+
     return NextResponse.json({
       success: true,
       message: 'SEO & Analytics settings updated successfully',

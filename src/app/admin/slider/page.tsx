@@ -90,7 +90,13 @@ export default function AdminSliderPage() {
       const slidesData = await slidesRes.json();
       const catsData = await catsRes.json();
 
-      if (slidesData.slides) setSlides(slidesData.slides);
+      if (slidesData.slides) {
+        setSlides(slidesData.slides);
+        try {
+          localStorage.setItem('redd_slides', JSON.stringify(slidesData.slides));
+          window.dispatchEvent(new CustomEvent('redd_data_updated', { detail: { type: 'slides', data: slidesData.slides } }));
+        } catch {}
+      }
       if (catsData.categories) setCategories(catsData.categories);
     } catch (err) {
       console.error('Error fetching slides:', err);
@@ -285,7 +291,12 @@ export default function AdminSliderPage() {
       const res = await fetch(`/api/slides/${slide.id}`, { method: 'DELETE' });
       const data = await res.json();
       if (res.ok) {
-        setSlides(slides.filter((s) => s.id !== slide.id));
+        const next = slides.filter((s) => s.id !== slide.id);
+        setSlides(next);
+        try {
+          localStorage.setItem('redd_slides', JSON.stringify(next));
+          window.dispatchEvent(new CustomEvent('redd_data_updated', { detail: { type: 'slides', data: next } }));
+        } catch {}
         showNotification('success', `Slide "${slide.title}" deleted.`);
       } else {
         showNotification('error', data.error || 'Failed to delete slide.');

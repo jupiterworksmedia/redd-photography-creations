@@ -1,6 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getPhotoById, updatePhoto, deletePhoto } from '@/lib/db';
+import { getPhotoById, updatePhoto, deletePhoto, persistDatabase } from '@/lib/db';
 import { getCurrentAdminSession } from '@/lib/auth';
+import { revalidatePath } from 'next/cache';
+
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
 
 export async function GET(
   _request: NextRequest,
@@ -35,6 +39,11 @@ export async function PUT(
       return NextResponse.json({ error: 'Photo not found' }, { status: 404 });
     }
 
+    await persistDatabase().catch(() => {});
+    try {
+      revalidatePath('/', 'layout');
+    } catch {}
+
     return NextResponse.json({ success: true, photo: updated });
   } catch (error) {
     console.error('Error updating photo:', error);
@@ -56,6 +65,11 @@ export async function DELETE(
     if (!deleted) {
       return NextResponse.json({ error: 'Photo not found or already deleted' }, { status: 404 });
     }
+
+    await persistDatabase().catch(() => {});
+    try {
+      revalidatePath('/', 'layout');
+    } catch {}
 
     return NextResponse.json({ success: true, message: 'Photo deleted successfully' });
   } catch (error) {

@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import fs from 'fs';
 import path from 'path';
 import { getCurrentAdminSession } from '@/lib/auth';
+import { uploadFileToGitHub } from '@/lib/githubSync';
 
 export async function POST(request: NextRequest) {
   try {
@@ -53,6 +54,10 @@ export async function POST(request: NextRequest) {
       const filePath = path.join(uploadDir, fileName);
 
       fs.writeFileSync(filePath, buffer);
+
+      // Persist permanently to GitHub repository public/uploads
+      await uploadFileToGitHub(`public/uploads/${fileName}`, buffer, `CMS Upload: ${fileName}`);
+
       return NextResponse.json({
         success: true,
         url: `/uploads/${fileName}`,
@@ -104,6 +109,9 @@ export async function POST(request: NextRequest) {
     const filePath = path.join(uploadDir, fileName);
 
     fs.writeFileSync(filePath, buffer);
+
+    // Persist permanently to GitHub repository public/uploads
+    await uploadFileToGitHub(`public/uploads/${fileName}`, buffer, `CMS Upload: ${fileName}`);
 
     const publicUrl = `/uploads/${fileName}`;
 

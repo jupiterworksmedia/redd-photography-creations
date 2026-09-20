@@ -60,6 +60,7 @@ export default function AdminSettingsPage() {
       try {
         localStorage.setItem('redd_site_settings', JSON.stringify(data.settings || settings));
         window.dispatchEvent(new Event('redd_settings_updated'));
+        window.dispatchEvent(new CustomEvent('redd_data_updated', { detail: { type: 'settings', data: data.settings || settings } }));
       } catch {}
 
       setSettingsSuccess(true);

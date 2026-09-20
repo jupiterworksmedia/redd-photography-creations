@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getHeroSlides, createHeroSlide } from '@/lib/db';
+import { getHeroSlides, createHeroSlide, persistDatabase } from '@/lib/db';
 import { getCurrentAdminSession } from '@/lib/auth';
+import { revalidatePath } from 'next/cache';
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
@@ -83,6 +84,11 @@ export async function POST(request: NextRequest) {
       order: typeof order === 'number' ? order : 1,
       enabled: Boolean(enabled),
     });
+
+    await persistDatabase().catch(() => {});
+    try {
+      revalidatePath('/', 'layout');
+    } catch {}
 
     return NextResponse.json({ success: true, slide: newSlide }, { status: 201 });
   } catch (error) {

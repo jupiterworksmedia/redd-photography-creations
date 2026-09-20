@@ -121,6 +121,7 @@ export default function AdminNavigationPage() {
         try {
           localStorage.setItem('redd_site_settings', JSON.stringify(data.settings));
           window.dispatchEvent(new Event('redd_settings_updated'));
+          window.dispatchEvent(new CustomEvent('redd_data_updated', { detail: { type: 'settings', data: data.settings } }));
         } catch {}
       }
       showNotification('success', 'Navigation, Logo & Footer settings saved successfully!');

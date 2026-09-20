@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getPhotos, createPhoto } from '@/lib/db';
+import { getPhotos, createPhoto, getCategories, persistDatabase } from '@/lib/db';
 import { getCurrentAdminSession } from '@/lib/auth';
 import { CategoryType } from '@/lib/types';
+import { revalidatePath } from 'next/cache';
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
@@ -54,10 +55,13 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const validCategories: CategoryType[] = ['fashion', 'boudoir', 'portraits', 'events', 'commercial'];
-    if (!validCategories.includes(category.toLowerCase())) {
+    const dbCategories = getCategories(true);
+    const validSlugs = dbCategories.length > 0
+      ? dbCategories.map((c) => c.slug.toLowerCase())
+      : ['fashion', 'boudoir', 'portraits', 'events', 'commercial'];
+    if (!validSlugs.includes(category.toLowerCase())) {
       return NextResponse.json(
-        { error: `Invalid category. Must be one of: ${validCategories.join(', ')}` },
+        { error: `Invalid category: "${category}". Must be one of: ${validSlugs.join(', ')}` },
         { status: 400 }
       );
     }
@@ -80,6 +84,13 @@ export async function POST(request: NextRequest) {
       featured: Boolean(featured),
       order: typeof order === 'number' ? order : 99,
     });
+
+    // Ensure database sync completes on serverless before returning
+    await persistDatabase().catch(() => {});
+
+    try {
+      revalidatePath('/', 'layout');
+    } catch {}
 
     return NextResponse.json({ success: true, photo: created }, { status: 201 });
   } catch (error) {

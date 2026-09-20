@@ -122,67 +122,22 @@ function getDatabase(): DatabaseSchema {
     return fallbackDb;
   }
 }
+import { uploadFileToGitHub } from './githubSync';
 
-const GITHUB_TOKEN = process.env.GITHUB_TOKEN;
-const GITHUB_REPO = process.env.GITHUB_REPO || 'jupiterworksmedia/redd-photography-creations';
 const GITHUB_DB_PATH = 'data/db.json';
 
-let syncTimer: NodeJS.Timeout | null = null;
-
-async function syncToGitHub(data: DatabaseSchema): Promise<void> {
-  if (!GITHUB_TOKEN) return;
-
-  try {
-    const getRes = await fetch(`https://api.github.com/repos/${GITHUB_REPO}/contents/${GITHUB_DB_PATH}`, {
-      headers: {
-        Authorization: `token ${GITHUB_TOKEN}`,
-        Accept: 'application/vnd.github.v3+json',
-        'User-Agent': 'REDD-CMS',
-      },
-      cache: 'no-store',
-    });
-
-    if (!getRes.ok) {
-      console.warn('[DB-SYNC] GitHub GET failed with status:', getRes.status);
-      return;
-    }
-
-    const meta = await getRes.json();
-    const sha = meta.sha;
-
-    const base64Content = Buffer.from(JSON.stringify(data, null, 2), 'utf-8').toString('base64');
-    const putRes = await fetch(`https://api.github.com/repos/${GITHUB_REPO}/contents/${GITHUB_DB_PATH}`, {
-      method: 'PUT',
-      headers: {
-        Authorization: `token ${GITHUB_TOKEN}`,
-        Accept: 'application/vnd.github.v3+json',
-        'Content-Type': 'application/json',
-        'User-Agent': 'REDD-CMS',
-      },
-      body: JSON.stringify({
-        message: 'CMS Auto-sync: Update data/db.json from administrative portal',
-        content: base64Content,
-        sha,
-        branch: 'main',
-      }),
-    });
-
-    if (putRes.ok) {
-      console.log('[DB-SYNC] Successfully synced database changes to GitHub repository!');
-    } else {
-      console.warn('[DB-SYNC] GitHub PUT failed with status:', putRes.status);
-    }
-  } catch (err) {
-    console.warn('[DB-SYNC] Error during GitHub sync:', err);
-  }
-}
-
-function scheduleGitHubSync(data: DatabaseSchema): void {
-  if (syncTimer) clearTimeout(syncTimer);
-  // Debounce sync by 3 seconds to batch rapid edits
-  syncTimer = setTimeout(() => {
-    syncToGitHub(data).catch(() => {});
-  }, 3000);
+/**
+ * Persists the current or passed database schema to the GitHub repository.
+ * Can be awaited by API routes to guarantee commits finish before serverless teardown.
+ */
+export async function persistDatabase(data?: DatabaseSchema): Promise<void> {
+  const targetData = data || memoryCache || getDatabase();
+  const buffer = Buffer.from(JSON.stringify(targetData, null, 2), 'utf-8');
+  await uploadFileToGitHub(
+    GITHUB_DB_PATH,
+    buffer,
+    'CMS Auto-sync: Update data/db.json from administrative portal'
+  );
 }
 
 function saveDatabase(data: DatabaseSchema): void {
@@ -198,8 +153,10 @@ function saveDatabase(data: DatabaseSchema): void {
     console.warn('[DB] Warning: File system write failed (operating in memory mode):', err);
   }
 
-  // Persist to GitHub repository in background so Vercel redeploys with latest data
-  scheduleGitHubSync(data);
+  // Trigger GitHub persistence immediately
+  persistDatabase(data).catch((err) => {
+    console.warn('[DB] Background GitHub persist failed:', err);
+  });
 }
 
 // ----------------- PHOTOS API -----------------

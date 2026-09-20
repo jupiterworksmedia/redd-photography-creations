@@ -34,57 +34,112 @@ export default function HomeClient({
 
   // Sync with live settings, categories, slides, photos and localStorage
   React.useEffect(() => {
+    // 1. Initial hydration from server props
     if (initialSettings) setSettings(initialSettings);
     if (initialCategories && initialCategories.length > 0) setCategories(initialCategories);
     if (initialSlides && initialSlides.length > 0) setSlides(initialSlides);
     if (initialPhotos && initialPhotos.length > 0) setPhotos(initialPhotos);
 
+    // 2. Immediately hydrate from local storage if available for instant reflection
     try {
-      const stored = localStorage.getItem('redd_site_settings');
-      if (stored) {
-        const parsed = JSON.parse(stored);
+      const storedSettings = localStorage.getItem('redd_site_settings');
+      if (storedSettings) {
+        const parsed = JSON.parse(storedSettings);
         if (parsed) setSettings(parsed);
+      }
+
+      const storedPhotos = localStorage.getItem('redd_photos');
+      if (storedPhotos) {
+        const parsed = JSON.parse(storedPhotos);
+        if (Array.isArray(parsed) && parsed.length > 0) setPhotos(parsed);
+      }
+
+      const storedSlides = localStorage.getItem('redd_slides');
+      if (storedSlides) {
+        const parsed = JSON.parse(storedSlides);
+        if (Array.isArray(parsed) && parsed.length > 0) setSlides(parsed);
+      }
+
+      const storedCategories = localStorage.getItem('redd_categories');
+      if (storedCategories) {
+        const parsed = JSON.parse(storedCategories);
+        if (Array.isArray(parsed) && parsed.length > 0) setCategories(parsed);
       }
     } catch {}
 
+    // 3. Background fresh network fetch from serverless API
     fetch('/api/settings', { cache: 'no-store' })
       .then((r) => r.json())
       .then((d) => {
-        if (d.settings) setSettings(d.settings);
+        if (d.settings) {
+          setSettings(d.settings);
+          try { localStorage.setItem('redd_site_settings', JSON.stringify(d.settings)); } catch {}
+        }
       })
       .catch(() => {});
 
     fetch('/api/categories', { cache: 'no-store' })
       .then((r) => r.json())
       .then((d) => {
-        if (d.categories) setCategories(d.categories);
+        if (d.categories) {
+          setCategories(d.categories);
+          try { localStorage.setItem('redd_categories', JSON.stringify(d.categories)); } catch {}
+        }
       })
       .catch(() => {});
 
     fetch('/api/slides', { cache: 'no-store' })
       .then((r) => r.json())
       .then((d) => {
-        if (d.slides) setSlides(d.slides);
+        if (d.slides) {
+          setSlides(d.slides);
+          try { localStorage.setItem('redd_slides', JSON.stringify(d.slides)); } catch {}
+        }
       })
       .catch(() => {});
 
     fetch('/api/gallery', { cache: 'no-store' })
       .then((r) => r.json())
       .then((d) => {
-        if (d.photos) setPhotos(d.photos);
+        if (d.photos) {
+          setPhotos(d.photos);
+          try { localStorage.setItem('redd_photos', JSON.stringify(d.photos)); } catch {}
+        }
       })
       .catch(() => {});
 
+    // 4. Listen to real-time custom events and cross-tab storage events
     const handleUpdate = () => {
       try {
-        const stored = localStorage.getItem('redd_site_settings');
-        if (stored) setSettings(JSON.parse(stored));
+        const storedSettings = localStorage.getItem('redd_site_settings');
+        if (storedSettings) setSettings(JSON.parse(storedSettings));
+
+        const storedPhotos = localStorage.getItem('redd_photos');
+        if (storedPhotos) {
+          const parsed = JSON.parse(storedPhotos);
+          if (Array.isArray(parsed)) setPhotos(parsed);
+        }
+
+        const storedSlides = localStorage.getItem('redd_slides');
+        if (storedSlides) {
+          const parsed = JSON.parse(storedSlides);
+          if (Array.isArray(parsed)) setSlides(parsed);
+        }
+
+        const storedCategories = localStorage.getItem('redd_categories');
+        if (storedCategories) {
+          const parsed = JSON.parse(storedCategories);
+          if (Array.isArray(parsed)) setCategories(parsed);
+        }
       } catch {}
     };
 
+    window.addEventListener('redd_data_updated', handleUpdate);
     window.addEventListener('redd_settings_updated', handleUpdate);
     window.addEventListener('storage', handleUpdate);
+
     return () => {
+      window.removeEventListener('redd_data_updated', handleUpdate);
       window.removeEventListener('redd_settings_updated', handleUpdate);
       window.removeEventListener('storage', handleUpdate);
     };

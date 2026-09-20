@@ -46,7 +46,13 @@ export default function AdminCategoriesPage() {
       const catsData = await catsRes.json();
       const photosData = await photosRes.json();
 
-      if (catsData.categories) setCategories(catsData.categories);
+      if (catsData.categories) {
+        setCategories(catsData.categories);
+        try {
+          localStorage.setItem('redd_categories', JSON.stringify(catsData.categories));
+          window.dispatchEvent(new CustomEvent('redd_data_updated', { detail: { type: 'categories', data: catsData.categories } }));
+        } catch {}
+      }
       if (photosData.photos) setPhotos(photosData.photos);
     } catch (err) {
       console.error('Error fetching categories:', err);
@@ -92,9 +98,12 @@ export default function AdminCategoriesPage() {
       });
 
       if (res.ok) {
-        setCategories(
-          categories.map((c) => (c.id === cat.id ? { ...c, enabled: newEnabled } : c))
-        );
+        const next = categories.map((c) => (c.id === cat.id ? { ...c, enabled: newEnabled } : c));
+        setCategories(next);
+        try {
+          localStorage.setItem('redd_categories', JSON.stringify(next));
+          window.dispatchEvent(new CustomEvent('redd_data_updated', { detail: { type: 'categories', data: next } }));
+        } catch {}
         showNotification('success', `Category "${cat.label}" is now ${newEnabled ? 'ENABLED' : 'DISABLED'}.`);
       } else {
         const data = await res.json();
@@ -161,7 +170,12 @@ export default function AdminCategoriesPage() {
       const res = await fetch(`/api/categories/${cat.id}`, { method: 'DELETE' });
       const data = await res.json();
       if (res.ok) {
-        setCategories(categories.filter((c) => c.id !== cat.id));
+        const next = categories.filter((c) => c.id !== cat.id);
+        setCategories(next);
+        try {
+          localStorage.setItem('redd_categories', JSON.stringify(next));
+          window.dispatchEvent(new CustomEvent('redd_data_updated', { detail: { type: 'categories', data: next } }));
+        } catch {}
         showNotification('success', `Category "${cat.label}" deleted.`);
       } else {
         showNotification('error', data.error || 'Failed to delete category.');

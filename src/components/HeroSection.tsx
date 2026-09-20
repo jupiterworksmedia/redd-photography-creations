@@ -231,6 +231,12 @@ export default function HeroSection({
               <img
                 src={slide.imageUrl}
                 alt={slide.title}
+                onError={(e) => {
+                  const target = e.currentTarget;
+                  if (!target.src.includes('unsplash.com')) {
+                    target.src = 'https://images.unsplash.com/photo-1509631179647-0177331693ae?q=80&w=2000&auto=format&fit=crop';
+                  }
+                }}
                 className={`w-full h-full object-cover object-center transition-transform duration-[10000ms] ease-out ${
                   isActive ? 'scale-105' : 'scale-100'
                 }`}

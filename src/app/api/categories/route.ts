@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getCategories, createCategory, getCategoryBySlug } from '@/lib/db';
+import { getCategories, createCategory, getCategoryBySlug, persistDatabase } from '@/lib/db';
 import { getCurrentAdminSession } from '@/lib/auth';
+import { revalidatePath } from 'next/cache';
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
@@ -69,6 +70,11 @@ export async function POST(request: NextRequest) {
       enabled: Boolean(enabled),
       order: typeof order === 'number' ? order : 10,
     });
+
+    await persistDatabase().catch(() => {});
+    try {
+      revalidatePath('/', 'layout');
+    } catch {}
 
     return NextResponse.json({ success: true, category: newCategory }, { status: 201 });
   } catch (error) {

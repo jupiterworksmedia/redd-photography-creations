@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import fs from 'fs';
 import path from 'path';
+import { fetchFileFromGitHub } from '@/lib/githubSync';
 
 export const dynamic = 'force-dynamic';
 
@@ -31,8 +32,29 @@ export async function GET(
       }
     }
 
-    if (!fs.existsSync(filePath) || !fs.statSync(filePath).isFile()) {
-      console.warn(`[UPLOAD SERVE] File not found: ${safeSegments.join('/')}`);
+    let fileBuffer: Buffer | null = null;
+
+    if (fs.existsSync(filePath) && fs.statSync(filePath).isFile()) {
+      fileBuffer = fs.readFileSync(filePath);
+    } else {
+      // Serverless Remote Fallback: Fetch directly from GitHub repository
+      const repoRelPath = `public/uploads/${safeSegments.join('/')}`;
+      fileBuffer = await fetchFileFromGitHub(repoRelPath);
+
+      if (fileBuffer) {
+        // Cache locally in /tmp/uploads for high-performance subsequent hits on this container
+        try {
+          const tmpDir = path.join('/tmp', 'uploads');
+          if (!fs.existsSync(tmpDir)) {
+            fs.mkdirSync(tmpDir, { recursive: true });
+          }
+          fs.writeFileSync(path.join(tmpDir, safeSegments[safeSegments.length - 1]), fileBuffer);
+        } catch {}
+      }
+    }
+
+    if (!fileBuffer) {
+      console.warn(`[UPLOAD SERVE] File not found locally or remotely: ${safeSegments.join('/')}`);
       return new NextResponse('Image not found', { status: 404 });
     }
 
@@ -49,9 +71,8 @@ export async function GET(
     };
 
     const contentType = mimeTypes[ext] || 'image/jpeg';
-    const fileBuffer = fs.readFileSync(filePath);
 
-    return new Response(fileBuffer, {
+    return new NextResponse(new Uint8Array(fileBuffer), {
       status: 200,
       headers: {
         'Content-Type': contentType,
