@@ -96,6 +96,26 @@
   },
   "photos": [
     {
+      "title": "Travel",
+      "category": "commercial",
+      "imageUrl": "/uploads/thailand-1789912285684.jpg",
+      "thumbnailUrl": "/uploads/thailand-1789912285684.jpg",
+      "aspectRatio": "tall",
+      "client": "",
+      "story": "",
+      "year": "2026",
+      "location": "",
+      "camera": "Hasselblad H6D-100c",
+      "lens": "HC 100mm f/2.2",
+      "aperture": "f/2.8",
+      "shutterSpeed": "1/250s",
+      "iso": "100",
+      "featured": false,
+      "order": 1,
+      "id": "photo-1789912291776-uv3gf",
+      "createdAt": "2026-09-20T13:51:31.776Z"
+    },
+    {
       "id": "fash-01",
       "title": "Monolith in Obsidian",
       "category": "fashion",
