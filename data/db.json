@@ -96,6 +96,26 @@
   },
   "photos": [
     {
+      "title": "Victoria",
+      "category": "fashion",
+      "imageUrl": "/uploads/victoria-1789983687900.jpg",
+      "thumbnailUrl": "/uploads/victoria-1789983687900.jpg",
+      "aspectRatio": "tall",
+      "client": "",
+      "story": "",
+      "year": "2026",
+      "location": "",
+      "camera": "FujiFilm",
+      "lens": "Fujifilm 50-140mm f2.8",
+      "aperture": "f/5.6",
+      "shutterSpeed": "1/160s",
+      "iso": "100",
+      "featured": false,
+      "order": 1,
+      "id": "photo-1789983730973-znvhx",
+      "createdAt": "2026-09-21T09:42:10.973Z"
+    },
+    {
       "title": "Fine Art",
       "category": "fashion",
       "imageUrl": "/uploads/somreeta1-portrait-1789979626743.jpg",
