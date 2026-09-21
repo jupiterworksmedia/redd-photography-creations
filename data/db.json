@@ -806,7 +806,7 @@
     "eyebrow": "About The Director & Studio",
     "headline": "A relentless pursuit of visual purity.",
     "headlineItalic": "visual purity",
-    "portraitImageUrl": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=1200&auto=format&fit=crop",
+    "portraitImageUrl": "/uploads/kiran_headshot-1789993505065.jpg",
     "directorName": "Kiran Redd",
     "directorRole": "Creative Director",
     "directorSubRole": "Founding Principal, REDD Studio",
@@ -828,7 +828,7 @@
       },
       {
         "id": "mile-3",
-        "value": "14",
+        "value": "4",
         "label": "International Awards",
         "order": 3
       }
