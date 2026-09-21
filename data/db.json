@@ -290,9 +290,9 @@
     {
       "id": "port-02",
       "title": "Ethereal Melancholy",
-      "category": "portraits",
-      "imageUrl": "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=1600&auto=format&fit=crop",
-      "aspectRatio": "square",
+      "category": "commercial",
+      "imageUrl": "/uploads/javed-1789982520829.jpg",
+      "aspectRatio": "tall",
       "client": "Acoustic Soul Album Art",
       "story": "Raw analog warmth captured under single tungsten spotlight during recording sessions in East London.",
       "year": "2023",
