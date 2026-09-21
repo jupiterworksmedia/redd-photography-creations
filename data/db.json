@@ -96,6 +96,26 @@
   },
   "photos": [
     {
+      "title": "Swagia",
+      "category": "fashion",
+      "imageUrl": "/uploads/swagia1-1789984092750.jpg",
+      "thumbnailUrl": "/uploads/swagia1-1789984092750.jpg",
+      "aspectRatio": "tall",
+      "client": "Swagia",
+      "story": "",
+      "year": "2026",
+      "location": "Dubai, UAE",
+      "camera": "Fujifilm",
+      "lens": "Fujifilm 50140mm f2.8",
+      "aperture": "f/2.8",
+      "shutterSpeed": "1/250s",
+      "iso": "100",
+      "featured": false,
+      "order": 1,
+      "id": "photo-1789984137084-amosf",
+      "createdAt": "2026-09-21T09:48:57.084Z"
+    },
+    {
       "title": "Victoria",
       "category": "fashion",
       "imageUrl": "/uploads/victoria2-1789983808549.jpg",
