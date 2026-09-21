@@ -1,8 +1,8 @@
 import fs from 'fs';
 import path from 'path';
 import bcrypt from 'bcryptjs';
-import { DatabaseSchema, PhotoItem, InquiryItem, SiteSettings, AdminUser, CategoryItem, HeroSlideItem, SeoAnalyticsSettings } from './types';
-import { initialSeedData, INITIAL_ADMIN_PASSWORD } from './seedData';
+import { DatabaseSchema, PhotoItem, InquiryItem, SiteSettings, AdminUser, CategoryItem, HeroSlideItem, SeoAnalyticsSettings, AboutPageSettings, ServicesPageSettings } from './types';
+import { initialSeedData, INITIAL_ADMIN_PASSWORD, initialAboutData, initialServicesData } from './seedData';
 
 // Determine writable data directory (use /tmp on Vercel / AWS Lambda)
 const IS_VERCEL = Boolean(process.env.VERCEL) || Boolean(process.env.AWS_LAMBDA_FUNCTION_NAME);
@@ -97,6 +97,18 @@ function getDatabase(): DatabaseSchema {
         ...parsed.settings,
         headerNav: [...initialSeedData.settings.headerNav],
       };
+      needsSave = true;
+    }
+
+    // Auto-migrate if about page settings missing in existing database
+    if (!parsed.about || typeof parsed.about !== 'object') {
+      parsed.about = { ...initialAboutData };
+      needsSave = true;
+    }
+
+    // Auto-migrate if services page settings missing in existing database
+    if (!parsed.services || typeof parsed.services !== 'object') {
+      parsed.services = { ...initialServicesData };
       needsSave = true;
     }
 
@@ -482,5 +494,40 @@ export function updateSeoSettings(updates: Partial<SeoAnalyticsSettings>): SeoAn
   saveDatabase(db);
   return db.seo;
 }
+
+// ----------------- ABOUT PAGE API -----------------
+
+export function getAboutSettings(): AboutPageSettings {
+  const db = getDatabase();
+  return db.about || initialAboutData;
+}
+
+export function updateAboutSettings(updates: Partial<AboutPageSettings>): AboutPageSettings {
+  const db = getDatabase();
+  db.about = {
+    ...getAboutSettings(),
+    ...updates,
+  };
+  saveDatabase(db);
+  return db.about;
+}
+
+// ----------------- SERVICES PAGE API -----------------
+
+export function getServicesSettings(): ServicesPageSettings {
+  const db = getDatabase();
+  return db.services || initialServicesData;
+}
+
+export function updateServicesSettings(updates: Partial<ServicesPageSettings>): ServicesPageSettings {
+  const db = getDatabase();
+  db.services = {
+    ...getServicesSettings(),
+    ...updates,
+  };
+  saveDatabase(db);
+  return db.services;
+}
+
 
 

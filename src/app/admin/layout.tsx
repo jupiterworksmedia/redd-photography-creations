@@ -17,6 +17,8 @@ import {
   SlidersHorizontal,
   Globe,
   PanelTop,
+  User,
+  Sparkles,
 } from 'lucide-react';
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
@@ -57,6 +59,8 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     { label: 'Portfolio Gallery', href: '/admin/gallery', icon: ImageIcon },
     { label: 'Hero Slider', href: '/admin/slider', icon: SlidersHorizontal },
     { label: 'Categories & Options', href: '/admin/categories', icon: Tags },
+    { label: 'About Page', href: '/admin/about', icon: User },
+    { label: 'Services Page', href: '/admin/services', icon: Sparkles },
     { label: 'Menu & Footer', href: '/admin/navigation', icon: PanelTop },
     {
       label: 'Inquiries & Bookings',

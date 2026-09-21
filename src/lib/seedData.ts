@@ -1,7 +1,188 @@
-import { DatabaseSchema } from './types';
+import { DatabaseSchema, AboutPageSettings, ServicesPageSettings } from './types';
 
 export const INITIAL_ADMIN_EMAIL = 'reddphotographycreations@gmail.com';
 export const INITIAL_ADMIN_PASSWORD = 'ReddAdmin2024!#';
+
+export const initialAboutData: AboutPageSettings = {
+  eyebrow: 'About The Director & Studio',
+  headline: 'A relentless pursuit of visual purity.',
+  headlineItalic: 'visual purity',
+  portraitImageUrl: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=1200&auto=format&fit=crop',
+  directorName: 'Kiran Redd',
+  directorRole: 'Creative Director',
+  directorSubRole: 'Founding Principal, REDD Studio',
+  bioParagraph1:
+    'REDD Photography Creations is an international editorial and commercial photography studio directed by Kiran Redd. Combining modernist discipline, high-contrast chiaroscuro, and uncompromising minimalism, REDD transforms moments into enduring pieces of visual art. With an eye shaped by contemporary architecture and classic Italian renaissance lighting, every frame is stripped of superfluous distraction to expose sheer emotion, texture, and refined aesthetic precision.',
+  bioQuote:
+    'Modernism in photography is not merely about cold lines—it is the deliberate stripping away of clutter to allow genuine human truth, organic texture, and form to command the viewer’s full attention.',
+  bioParagraph2:
+    'Whether orchestrating a 20-person crew on a high-fashion campaign in Milan, working one-on-one in an intimate and empowering fine-art boudoir setting, or crafting an authoritative corporate portrait, Kiran’s method is grounded in patience, anatomical awareness, and absolute technical mastery.',
+  milestones: [
+    { id: 'mile-1', value: '12+', label: 'Years Behind Lens', order: 1 },
+    { id: 'mile-2', value: '18', label: 'Solo Exhibitions', order: 2 },
+    { id: 'mile-3', value: '14', label: 'International Awards', order: 3 },
+  ],
+  honorsEyebrow: 'Recognition',
+  honorsTitle: 'Features & Honors',
+  honorsList: [
+    { id: 'hon-1', title: 'VOGUE', subtitle: 'Scandinavia & Italia', order: 1 },
+    { id: 'hon-2', title: 'VANITY FAIR', subtitle: 'Executive Portraiture', order: 2 },
+    { id: 'hon-3', title: 'ARCH DIGEST', subtitle: 'Commercial Architecture', order: 3 },
+    { id: 'hon-4', title: 'PX3 PARIS', subtitle: 'Gold Award Winner', order: 4 },
+  ],
+  gearTitleEyebrow: 'The Optical Arsenal',
+  gearTitle: 'Curated Production Gear',
+  ctaTitle: 'Commission a Visual Narrative',
+  ctaDescription: 'Available for private sessions, high-fashion campaigns, and commercial briefs globally.',
+  ctaButtonText: 'Request Shoot Consultation',
+  ctaButtonLink: '/contact',
+};
+
+export const initialServicesData: ServicesPageSettings = {
+  eyebrow: 'Bespoke Production Services',
+  headline: 'Disciplines & Commissions',
+  headlineItalic: 'Commissions',
+  introText:
+    'Every project is treated as an individual piece of art. Explore our specialized services across the five pillars of REDD Photography Creations.',
+  offerings: [
+    {
+      id: 'serv-fashion',
+      category: 'fashion',
+      title: 'Haute Couture & Editorial Fashion',
+      eyebrow: 'Editorial Campaigns & Lookbooks',
+      description:
+        'Designed for high-end fashion labels, independent designers, and editorial publications. We craft architectural, dynamic narratives that treat garments as sculptural art in motion.',
+      features: [
+        'Full moodboard, concept development, and casting support',
+        'Multi-light studio setup or location scouts (brutalist, natural, urban)',
+        'Lookbook and high-res campaign assets formatted for print & web',
+        'Hair, makeup, and wardrobe styling coordination upon request',
+      ],
+      idealFor: 'Designers, magazines, modeling agencies, and couture ateliers',
+      investment: 'From $6,500',
+      buttonText: 'Inquire About This Service',
+      buttonLink: '/contact?category=fashion',
+      enabled: true,
+      order: 1,
+    },
+    {
+      id: 'serv-boudoir',
+      category: 'boudoir',
+      title: 'Fine-Art Boudoir & Intimate Form',
+      eyebrow: 'Empowering, Safe & Tasteful Fine-Art',
+      description:
+        'An artistic celebration of feminine form, self-love, and vulnerability. Executed in a completely safe, private, and discreet setting using soft natural window light and Belgian linen textures.',
+      features: [
+        'Strict privacy guarantee and confidential image handling',
+        'Pre-session wardrobe consultation and styling guide',
+        'Gentle, body-affirming posing guidance (no prior modeling experience needed)',
+        'Signature fine-art retouching focusing on natural skin fidelity and tones',
+      ],
+      idealFor: 'Milestone celebrations, personal empowerment, bridal gifts, and fine-art collectors',
+      investment: 'From $2,800',
+      buttonText: 'Inquire About This Service',
+      buttonLink: '/contact?category=boudoir',
+      enabled: true,
+      order: 2,
+    },
+    {
+      id: 'serv-portraits',
+      category: 'portraits',
+      title: 'Cinematic & Executive Portraiture',
+      eyebrow: 'Personal Branding & Character Studies',
+      description:
+        'Far beyond standard corporate headshots. We construct moody, high-contrast chiaroscuro character studies that project gravity, intellect, and timeless distinction.',
+      features: [
+        'One-on-one focused studio session with tethered monitor review',
+        'Multiple lighting setups (dramatic rim light, Rembrandt key, soft daylight)',
+        'Master retouched portraits delivered in web and gallery print formats',
+        'Commercial usage license for press releases, books, and digital presence',
+      ],
+      idealFor: 'CEOs, founders, artists, directors, authors, and thought leaders',
+      investment: 'From $1,800',
+      buttonText: 'Inquire About This Service',
+      buttonLink: '/contact?category=portraits',
+      enabled: true,
+      order: 3,
+    },
+    {
+      id: 'serv-events',
+      category: 'events',
+      title: 'High-Society Galas & Runway Events',
+      eyebrow: 'Documentary Elegance & VIP Gatherings',
+      description:
+        'Discreet, candid visual documentation of premier events. We capture unposed laughter, kinetic ballroom atmosphere, and VIP elegance without invasive flash interruption.',
+      features: [
+        'Unobtrusive photojournalistic coverage by experienced lead photographer',
+        'Same-night or 24-hour press highlight delivery for PR wire & social media',
+        'Full high-resolution master collection with complete archival color grades',
+        'Red carpet arrival and ambient architectural venue coverage',
+      ],
+      idealFor: 'Luxury charity galas, fashion shows, private brand dinners, and cultural summits',
+      investment: 'From $4,500',
+      buttonText: 'Inquire About This Service',
+      buttonLink: '/contact?category=events',
+      enabled: true,
+      order: 4,
+    },
+    {
+      id: 'serv-commercial',
+      category: 'commercial',
+      title: 'Commercial & Advertising Campaigns',
+      eyebrow: 'Product, Automotive & Architectural Imagery',
+      description:
+        'Hyper-focused commercial precision. Shot on 100-megapixel medium format sensors to highlight microscopic craftsmanship, materials, and luxury brand prestige.',
+      features: [
+        'Macro precision lighting for timepieces, jewelry, and perfumery',
+        'Architectural interior & exterior twilight captures with perspective control',
+        'Global buyout and worldwide digital/print advertising licensing',
+        'Extensive digital compositing, focus stacking, and color accuracy certification',
+      ],
+      idealFor: 'Horology brands, architects, luxury hospitality, and premium consumer goods',
+      investment: 'Custom Quote',
+      buttonText: 'Inquire About This Service',
+      buttonLink: '/contact?category=commercial',
+      enabled: true,
+      order: 5,
+    },
+  ],
+  journeyEyebrow: 'The Experience',
+  journeyTitle: 'From Concept to Master Print',
+  journeySteps: [
+    {
+      id: 'step-1',
+      stepNumber: 'STEP 01',
+      title: 'Vision Consultation',
+      description:
+        'We align on your creative intent, moodboards, color palette, location requirements, and styling references.',
+    },
+    {
+      id: 'step-2',
+      stepNumber: 'STEP 02',
+      title: 'Production Day',
+      description:
+        'Meticulous execution with tethered medium-format capture, continuous direction, and stress-free atmosphere.',
+    },
+    {
+      id: 'step-3',
+      stepNumber: 'STEP 03',
+      title: 'Master Color Grading',
+      description:
+        'Individual tonal sculpting, frequency separation retouching, and cinematic color curves applied by hand.',
+    },
+    {
+      id: 'step-4',
+      stepNumber: 'STEP 04',
+      title: 'Archival Delivery',
+      description:
+        'Private digital cloud gallery with full-resolution master files and optional handmade fine-art prints.',
+    },
+  ],
+  ctaTitle: 'Commission a Bespoke Production',
+  ctaDescription: 'Whether an editorial lookbook, intimate portraiture, or luxury brand advertising.',
+  ctaButtonText: 'Initiate Booking Proposal',
+  ctaButtonLink: '/contact',
+};
 
 export const initialSeedData: DatabaseSchema = {
   admin: {
@@ -612,4 +793,8 @@ export const initialSeedData: DatabaseSchema = {
     aiStudioSynopsis:
       'REDD Photography Creations is an international modernist photography studio founded by Kiran Redd, operating across New York, Paris, Milan, and worldwide. Specializing in 5 core disciplines: Haute Couture & Fashion, Fine-Art Boudoir, Cinematic Portraits, High-Society Events & Galas, and Luxury Commercial Advertising. Shot on 100-megapixel medium format Hasselblad and Leica M11 systems with Profoto high-speed strobes. Commission inquiries: reddphotographycreations@gmail.com.',
   },
+  about: initialAboutData,
+  services: initialServicesData,
 };
+
+

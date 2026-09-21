@@ -170,6 +170,84 @@ export interface SeoAnalyticsSettings {
   aiStudioSynopsis?: string; // Structured semantic synopsis for LLM citations
 }
 
+// ----------------- ABOUT PAGE SETTINGS -----------------
+
+export interface MilestoneItem {
+  id: string;
+  value: string; // e.g. "12+"
+  label: string; // e.g. "Years Behind Lens"
+  order?: number;
+}
+
+export interface HonorItem {
+  id: string;
+  title: string; // e.g. "VOGUE"
+  subtitle: string; // e.g. "Scandinavia & Italia"
+  order?: number;
+}
+
+export interface AboutPageSettings {
+  eyebrow: string; // e.g. "About The Director & Studio"
+  headline: string; // e.g. "A relentless pursuit of visual purity."
+  headlineItalic: string; // e.g. "visual purity"
+  portraitImageUrl: string;
+  directorName: string;
+  directorRole: string; // e.g. "Creative Director"
+  directorSubRole: string; // e.g. "Founding Principal, REDD Studio"
+  bioParagraph1: string;
+  bioQuote: string;
+  bioParagraph2: string;
+  milestones: MilestoneItem[];
+  honorsEyebrow: string;
+  honorsTitle: string;
+  honorsList: HonorItem[];
+  gearTitleEyebrow: string;
+  gearTitle: string;
+  ctaTitle: string;
+  ctaDescription: string;
+  ctaButtonText: string;
+  ctaButtonLink: string;
+}
+
+// ----------------- SERVICES PAGE SETTINGS -----------------
+
+export interface ServiceOfferingItem {
+  id: string;
+  category: string; // e.g. 'fashion', 'boudoir', 'portraits', etc.
+  eyebrow: string; // e.g. 'Editorial Campaigns & Lookbooks'
+  title: string; // e.g. 'Haute Couture & Editorial Fashion'
+  description: string;
+  features: string[]; // List of included deliverables/elements
+  idealFor: string;
+  investment: string; // e.g. 'From $6,500'
+  buttonText: string; // e.g. 'Inquire About This Service'
+  buttonLink: string; // e.g. '/contact?category=fashion'
+  enabled: boolean;
+  order: number;
+}
+
+export interface ProductionJourneyStep {
+  id: string;
+  stepNumber: string; // e.g. 'STEP 01'
+  title: string; // e.g. 'Vision Consultation'
+  description: string;
+}
+
+export interface ServicesPageSettings {
+  eyebrow: string; // e.g. "Bespoke Production Services"
+  headline: string; // e.g. "Disciplines & Commissions"
+  headlineItalic: string; // e.g. "Commissions"
+  introText: string;
+  offerings: ServiceOfferingItem[];
+  journeyEyebrow: string; // e.g. "The Experience"
+  journeyTitle: string; // e.g. "From Concept to Master Print"
+  journeySteps: ProductionJourneyStep[];
+  ctaTitle?: string;
+  ctaDescription?: string;
+  ctaButtonText?: string;
+  ctaButtonLink?: string;
+}
+
 export interface AdminUser {
   email: string;
   passwordHash: string;
@@ -185,6 +263,9 @@ export interface DatabaseSchema {
   categories: CategoryItem[];
   heroSlides: HeroSlideItem[];
   seo: SeoAnalyticsSettings;
+  about?: AboutPageSettings;
+  services?: ServicesPageSettings;
 }
+
 
 
