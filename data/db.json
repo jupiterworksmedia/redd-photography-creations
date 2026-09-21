@@ -98,7 +98,7 @@
     {
       "title": "Tanisha",
       "category": "fashion",
-      "imageUrl": "/uploads/tanisha-1789985248641.jpg",
+      "imageUrl": "/uploads/tanisha-1789985338621.jpg",
       "thumbnailUrl": "/uploads/tanisha-1789985248641.jpg",
       "aspectRatio": "tall",
       "client": "",
@@ -110,7 +110,7 @@
       "aperture": "f/6",
       "shutterSpeed": "1/160s",
       "iso": "100",
-      "featured": false,
+      "featured": true,
       "order": 1,
       "id": "photo-1789985282728-cdx6b",
       "createdAt": "2026-09-21T10:08:02.728Z"
