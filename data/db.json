@@ -308,10 +308,10 @@
     },
     {
       "id": "eve-01",
-      "title": "Met Gala Midnight Veil",
+      "title": "Jeffery Sport look",
       "category": "events",
-      "imageUrl": "https://images.unsplash.com/photo-1511795409834-ef04bbd61622?q=80&w=1600&auto=format&fit=crop",
-      "aspectRatio": "wide",
+      "imageUrl": "/uploads/jeffery2-1789983333318.jpg",
+      "aspectRatio": "tall",
       "client": "Vogue Special Coverage",
       "story": "The kinetic elegance of high society gathering on grand illuminated steps under candlelight.",
       "year": "2024",
