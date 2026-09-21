@@ -96,6 +96,26 @@
   },
   "photos": [
     {
+      "title": "Tanya",
+      "category": "portraits",
+      "imageUrl": "/uploads/tanya-1789986239323.jpg",
+      "thumbnailUrl": "/uploads/tanya-1789986239323.jpg",
+      "aspectRatio": "tall",
+      "client": "",
+      "story": "",
+      "year": "2026",
+      "location": "",
+      "camera": "Hasselblad H6D-100c",
+      "lens": "HC 100mm f/2.2",
+      "aperture": "f/2.8",
+      "shutterSpeed": "1/250s",
+      "iso": "100",
+      "featured": true,
+      "order": 1,
+      "id": "photo-1789986243355-wnpzc",
+      "createdAt": "2026-09-21T10:24:03.355Z"
+    },
+    {
       "title": "Tanisha",
       "category": "fashion",
       "imageUrl": "/uploads/tanisha-1789985338621.jpg",
