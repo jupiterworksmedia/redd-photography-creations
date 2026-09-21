@@ -116,7 +116,7 @@
       "createdAt": "2026-09-20T13:57:00.821Z"
     },
     {
-      "title": "Fine Art",
+      "title": "Mask",
       "category": "fine-art",
       "imageUrl": "/uploads/somreeta-slowshutter-1789979765985.jpg",
       "thumbnailUrl": "/uploads/thailand-1789912352205.jpg",
@@ -130,7 +130,7 @@
       "aperture": "f/2.8",
       "shutterSpeed": "1/250s",
       "iso": "100",
-      "featured": false,
+      "featured": true,
       "order": 1,
       "id": "photo-1789912357628-5gl6m",
       "createdAt": "2026-09-20T13:52:37.628Z"
