@@ -806,7 +806,7 @@
     "eyebrow": "About The Director & Studio",
     "headline": "A relentless pursuit of visual purity.",
     "headlineItalic": "visual purity",
-    "portraitImageUrl": "/uploads/kiran_headshot-1789993505065.jpg",
+    "portraitImageUrl": "/uploads/kiran1-1789993615773.jpg",
     "directorName": "Kiran Redd",
     "directorRole": "Creative Director",
     "directorSubRole": "Founding Principal, REDD Studio",
@@ -828,7 +828,7 @@
       },
       {
         "id": "mile-3",
-        "value": "4",
+        "value": "14",
         "label": "International Awards",
         "order": 3
       }
@@ -844,7 +844,7 @@
       },
       {
         "id": "hon-2",
-        "title": "Adobe Lightroom Summit",
+        "title": "VANITY FAIR",
         "subtitle": "Executive Portraiture",
         "order": 2
       },
