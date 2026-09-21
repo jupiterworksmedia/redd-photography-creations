@@ -524,11 +524,11 @@
   "heroSlides": [
     {
       "id": "slide-01",
-      "title": "Monolith in Obsidian",
+      "title": "Jeffery",
       "subtitle": "Vogue Scandinavia • Autumn / Winter Editorial",
       "tagline": "Haute Couture & Movement",
       "description": "Sculptural silhouette editorial captured in an abandoned brutalist pavilion near Copenhagen. The interplay between fluid silk and rigid concrete.",
-      "imageUrl": "https://images.unsplash.com/photo-1509631179647-0177331693ae?q=80&w=2000&auto=format&fit=crop",
+      "imageUrl": "/uploads/jeffery3-1789983531665.jpg",
       "category": "fashion",
       "buttonText": "Explore Fashion Editorial",
       "buttonLink": "#work",
