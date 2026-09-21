@@ -751,7 +751,7 @@
       "subtitle": "Swiss Masterpiece Advertising Campaign",
       "tagline": "Commercial & Architectural Art",
       "description": "High-precision macro lighting isolating titanium bevels, tourbillon mechanics, and microscopic engineering excellence.",
-      "imageUrl": "/uploads/thailand-1789905048273.jpg",
+      "imageUrl": "/uploads/aya4-1789986711959.jpg",
       "category": "commercial",
       "buttonText": "Explore Commercial Works",
       "buttonLink": "#work",
@@ -761,7 +761,7 @@
       "fontStyle": "modern-sans",
       "titleCase": "uppercase",
       "accentColor": "white",
-      "overlayOpacity": 0.65,
+      "overlayOpacity": 0.55,
       "order": 4,
       "enabled": true,
       "createdAt": "2024-01-25T16:00:00Z"
