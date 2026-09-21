@@ -96,6 +96,26 @@
   },
   "photos": [
     {
+      "title": "High Key",
+      "category": "fashion",
+      "imageUrl": "/uploads/akila2-1789984551612.jpg",
+      "thumbnailUrl": "/uploads/akila2-1789984551612.jpg",
+      "aspectRatio": "tall",
+      "client": "",
+      "story": "",
+      "year": "2026",
+      "location": "",
+      "camera": "Hasselblad H6D-100c",
+      "lens": "HC 100mm f/2.2",
+      "aperture": "f/2.8",
+      "shutterSpeed": "1/250s",
+      "iso": "100",
+      "featured": false,
+      "order": 1,
+      "id": "photo-1789984564716-n9yb3",
+      "createdAt": "2026-09-21T09:56:04.716Z"
+    },
+    {
       "title": "Akhila",
       "category": "fashion",
       "imageUrl": "/uploads/akila-1789984410536.jpg",
