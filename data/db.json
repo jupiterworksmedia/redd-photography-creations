@@ -94,7 +94,7 @@
     {
       "title": "Nadir",
       "category": "portraits",
-      "imageUrl": "/uploads/nadir1-1790159276766.jpg",
+      "imageUrl": "/uploads/nadir1-1790159371185.jpg",
       "thumbnailUrl": "/uploads/nadir1-1790159276766.jpg",
       "aspectRatio": "tall",
       "client": "",
@@ -106,7 +106,7 @@
       "aperture": "f/2.8",
       "shutterSpeed": "1/250s",
       "iso": "100",
-      "featured": false,
+      "featured": true,
       "order": 1,
       "id": "photo-1790159290755-41jf3",
       "createdAt": "2026-09-23T10:28:10.755Z"
