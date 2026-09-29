@@ -777,7 +777,7 @@
       "fontStyle": "modern-sans",
       "titleCase": "uppercase",
       "accentColor": "white",
-      "overlayOpacity": 0.55,
+      "overlayOpacity": 0.5,
       "order": 4,
       "enabled": true,
       "createdAt": "2024-01-25T16:00:00Z"
