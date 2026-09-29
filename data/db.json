@@ -756,7 +756,7 @@
       "fontStyle": "editorial-serif",
       "titleCase": "uppercase",
       "accentColor": "crimson",
-      "overlayOpacity": 0.6,
+      "overlayOpacity": 0.5,
       "order": 3,
       "enabled": true,
       "createdAt": "2024-01-20T14:00:00Z"
