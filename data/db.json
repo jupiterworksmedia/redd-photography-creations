@@ -759,6 +759,27 @@
       "enabled": true,
       "id": "slide-1792410040061-6lny",
       "createdAt": "2026-10-19T11:40:40.061Z"
+    },
+    {
+      "title": "Serene",
+      "subtitle": "Make it on the Internet",
+      "tagline": "",
+      "description": "",
+      "imageUrl": "/uploads/serene-1792410178696.jpg",
+      "category": "fashion",
+      "buttonText": "Explore Series",
+      "buttonLink": "#work",
+      "secondaryButtonText": "Initiate Booking",
+      "secondaryButtonLink": "/contact",
+      "textAlignment": "left",
+      "fontStyle": "editorial-serif",
+      "titleCase": "uppercase",
+      "accentColor": "crimson",
+      "overlayOpacity": 0.45,
+      "order": 2,
+      "enabled": true,
+      "id": "slide-1792410224623-apnu",
+      "createdAt": "2026-10-19T11:43:44.623Z"
     }
   ],
   "seo": {
