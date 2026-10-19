@@ -92,6 +92,26 @@
   },
   "photos": [
     {
+      "title": "Serene",
+      "category": "portraits",
+      "imageUrl": "/uploads/dsc07324_copy-1792410359152.jpg",
+      "thumbnailUrl": "/uploads/dsc07324_copy-1792410359152.jpg",
+      "aspectRatio": "tall",
+      "client": "Make it on the Internet",
+      "story": "",
+      "year": "2026",
+      "location": "Dubai, UAE",
+      "camera": "Fujifilm",
+      "lens": "50-140mm",
+      "aperture": "f/2.8",
+      "shutterSpeed": "1/250s",
+      "iso": "100",
+      "featured": true,
+      "order": 1,
+      "id": "photo-1792410418245-fu5ew",
+      "createdAt": "2026-10-19T11:46:58.245Z"
+    },
+    {
       "title": "Nadir",
       "category": "portraits",
       "imageUrl": "/uploads/nadir1-1790159371185.jpg",
